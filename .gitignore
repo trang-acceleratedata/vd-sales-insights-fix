@@ -1,0 +1,8 @@
+target/
+dbt_packages/
+logs/
+.venv/
+.env
+.livy-session-id*.txt
+.eval-run/
+__pycache__/
