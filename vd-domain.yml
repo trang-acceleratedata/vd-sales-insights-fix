@@ -1,0 +1,26 @@
+name: Sales Insights Fabric Fix
+slug: sales-insights-fabric-fix
+destination:
+  type: fabric
+  defaultSchema: e2e_question_fix
+prodManifestPath: prod-manifest
+repository:
+  url: https://github.com/trang-acceleratedata/vd-sales-insights-fix.git
+  fullName: trang-acceleratedata/vd-sales-insights-fix
+  organization: trang-acceleratedata
+  name: vd-sales-insights-fix
+  installationId: 0
+  defaultBranch: main
+domain:
+  workspaceId: 8f627056-801c-4a19-876a-a9b458ffb7a2
+  workspaceName: vd-dbt-fabricspark-prod
+  lakehouseId: f84a96dd-8b41-4206-a680-9b712d2878da
+  lakehouseName: kuruma_prod_lake
+  schema: e2e_question_fix
+  lakehouseSqlEndpoint: zcoepygy7vhunaxjs7ut7gix3m-kzygfdy4qamuvb3kvg2fr75xui.datawarehouse.fabric.microsoft.com
+ephemeral:
+  workspaceId: 769a4463-1e77-4554-b2a0-2e70edae4edd
+  workspaceName: intent_new_intent_41ad7dc3
+  lakehouseId: 82289f6c-56e2-41c9-a397-60403f11b723
+  lakehouseName: lh_new_intent_41ad7dc3
+  schema: e2e_question_fix
