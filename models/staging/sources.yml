@@ -17,7 +17,7 @@ sources:
             description: "Fulfilment status assigned by the commerce platform."
             tests:
               - accepted_values:
-                  values: ['shipped', 'delivered', 'returned']
+                  values: ['shipped', 'delivered', 'returned', 'cart', 'cancelled']
           - name: amount
             description: "Order value in EUR."
             tests:
