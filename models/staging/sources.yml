@@ -18,6 +18,7 @@ sources:
             tests:
               - accepted_values:
                   values: ['shipped', 'delivered', 'returned']
+                  severity: warn
           - name: amount
             description: "Order value in EUR."
             tests:

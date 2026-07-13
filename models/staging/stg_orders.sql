@@ -16,11 +16,12 @@ renamed AS (
   FROM source
 ),
 
--- Revenue-bearing orders only: exclude carts and cancellations.
+-- Revenue-bearing orders only: exclude non-fulfilled statuses.
+-- Denylist approach ensures new fulfilled statuses from the platform are not silently dropped.
 filtered AS (
   SELECT *
   FROM renamed
-  WHERE order_status IN ('shipped', 'delivered', 'returned')
+  WHERE order_status NOT IN ('pending', 'cart', 'cancelled')
 )
 
 SELECT * FROM filtered
