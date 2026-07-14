@@ -73,4 +73,4 @@ True March total: EUR 29790.66 / 140 orders. Gap: EUR 23435.45 / 110 `completed`
 | Requester approval | User confirmed "Yes, apply the fix" | APPROVED |
 | Shortcut provisioning | `fabric_source_shortcuts` — `src_orders.orders` created in ephemeral | PASS |
 | Sandbox build | `dbt build --select stg_orders mart_sales --target dev` — exit code 0, PASS=13 WARN=0 ERROR=0 SKIP=0 | GREEN |
-| code-reviewer | Pending | — |
+| code-reviewer | verdict: approved — "fix correctly adds 'completed' to both the stg_orders filter and accepted_values; lists in sync, LOWER() applied before filter, no downstream change required"; findings: [] | APPROVED |
