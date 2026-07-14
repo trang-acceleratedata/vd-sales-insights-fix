@@ -88,4 +88,23 @@ The `accepted_values` guard in `sources.yml` was designed to catch exactly this 
 
 ## Gate Ledger
 
-*(Populated by running-remediate-phase after approval)*
+- ✅ User approval recorded — requester approved the specific two-file change in conversation (2026-07-14).
+- Prod target fetch — `dbt_target_files_list` (target: domain, slug: sales-insights-fabric-fix): 404 PathNotFound — no published snapshot; greenfield run, `--defer` not applicable. outcome: `skipped`
+- Source shortcut — `fabric_source_shortcuts` (sourceSchema: src_orders, tables: [orders]): created 1 shortcut in ephemeral lakehouse. exit: 0, outcome: `pass`
+- dbt build — `dbt build --select stg_orders+ --target dev`: exit 0, PASS=13 WARN=0 ERROR=0 SKIP=0. All model and test nodes green (stg_orders view + mart_sales table + 11 data tests). outcome: `pass`
+- Dev-artifact scan — `grep -rn "dev_mode=True|\.add_limit(|hardcoded EPHEMERAL IDs" models/ ingestion/ dbt_project.yml`: no hits; `profiles.yml` uses `env_var(...)` indirection only. outcome: `pass`
+- code-reviewer verdict:
+  ```json
+  {
+    "verdict": "APPROVE",
+    "summary": "Two one-line changes — adding 'completed' to the stg_orders IN-filter and the accepted_values guard — are minimal, correct, and aligned with intent AC2 and the design ledger. PASS=13, WARN=0, ERROR=0. Only finding is a pre-existing MissingArgumentsPropertyInGenericTestDeprecation warning on the accepted_values YAML format; not introduced by this fix.",
+    "issues": [
+      {
+        "severity": "warning",
+        "location": "models/staging/sources.yml:19-20",
+        "message": "Pre-existing: accepted_values arguments not nested under 'arguments:' property (MissingArgumentsPropertyInGenericTestDeprecation). Not introduced by this fix."
+      }
+    ]
+  }
+  ```
+- ✅ Verify gate
