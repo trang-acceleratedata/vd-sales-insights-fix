@@ -20,7 +20,7 @@ renamed AS (
 filtered AS (
   SELECT *
   FROM renamed
-  WHERE order_status IN ('shipped', 'delivered', 'returned')
+  WHERE order_status IN ('shipped', 'delivered', 'returned', 'completed')
 )
 
 SELECT * FROM filtered
