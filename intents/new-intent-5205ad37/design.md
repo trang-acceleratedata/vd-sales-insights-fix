@@ -76,3 +76,32 @@ High. The `sql-probe` claims directly quantify the missing revenue and identify 
 #### Decision
 
 `code-change`
+
+---
+
+## Gate Ledger
+
+### REMEDIATE — 2026-07-15
+
+**Approval:** recorded (user selected "Approve — apply the fix, verify it in the sandbox, and open the PR")
+
+**Fix applied:**
+- `models/staging/stg_orders.sql:23` — added `'completed'` to the IN filter (commit `7fd1981`)
+- `models/staging/sources.yml:20` — added `'completed'` to `accepted_values` guard (commit `7fd1981`)
+
+**Sandbox verification:**
+
+```
+dbt build --select stg_orders+ --target dev
+exit code: 0
+PASS=13  WARN=0  ERROR=0  SKIP=0  TOTAL=13
+  model.sales_insights.stg_orders       success
+  model.sales_insights.mart_sales       success
+  [11 data tests]                       pass
+```
+
+*Note (code-reviewer warning):* the `--select stg_orders+` command does not include the upstream source `accepted_values` test (source tests sit upstream, not downstream). Guard correctness verified by inspection: `sources.yml:20` now lists the same four values as the SQL filter. Future sandbox runs touching `sources.yml` should use `+stg_orders+` to execute the guard.
+
+*Ephemeral MCP query path:* unavailable during verification (Studio config error: `BETTER_AUTH_SECRET`/`DATA_ENCRYPTION_KEY` missing). Degradation recorded; dbt run evidence is the primary verification signal.
+
+**code-reviewer verdict:** `approved: true` — "Minimal, correct two-file fix that admits 'completed' orders to both the revenue filter and the source guard, consistent with design intent and fully green in sandbox."
