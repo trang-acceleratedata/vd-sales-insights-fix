@@ -1,0 +1,56 @@
+# Studio-owned Fabric dbt project (VD-3794). Seeded skip_if_exists, so a domain
+# that has already customized its project keeps it untouched on every later spawn.
+#
+# `sales_insights_fabric_fix` and `dbt_fab_spark` are substituted at seed time by
+# the template engine, NOT by dbt. `name:` identifies the project and must equal
+# the top-level keys under `models:` and `sources:`; `profile:` is a lookup key
+# into the seeded transformation/profiles.yml and is deliberately different.
+# Everything else resolves at runtime through env_var(), so no domain coordinate
+# is baked into the committed file.
+name: 'sales_insights_fabric_fix'
+version: '1.0.0'
+config-version: 2
+
+profile: 'dbt_fab_spark'
+
+model-paths: ['models']
+analysis-paths: ['analyses']
+test-paths: ['tests']
+seed-paths: ['seeds']
+macro-paths: ['macros']
+snapshot-paths: ['snapshots']
+
+clean-targets:
+  - 'target'
+  - 'dbt_packages'
+
+dispatch:
+  - macro_namespace: elementary
+    search_order:
+      - elementary_fabricspark
+      - elementary
+
+vars:
+  disable_dbt_artifacts_autoupload: true
+  disable_dbt_invocation_autoupload: true
+  disable_run_results: true
+
+models:
+  'sales_insights_fabric_fix':
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: ephemeral
+    marts:
+      +materialized: table
+
+# Sources read the domain workspace. Substituted at seed time, NOT env_var():
+# dbt renders the whole of dbt_project.yml on every invocation (there is no
+# target selection to skip a block, as there is in profiles.yml), and
+# VD_DOMAIN_FABRIC_WORKSPACE_NAME is absent whenever the Domain binding carries
+# no workspace name, and absent in Fabric CI entirely — an env_var() with no
+# default would raise on every dbt command. The Domain workspace is a stable
+# coordinate, so seeding the literal is what the removed render script did too.
+sources:
+  'sales_insights_fabric_fix':
+    +workspace_name: 'vd-dbt-fabricspark-prod'
